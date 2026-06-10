@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Property Listing Generator — Cogent Properties</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style></style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="card">
+        <div class="brand">
+          <div class="brand-dot">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+          </div>
+          <span class="brand-name">Listing Generator</span>
+          <span class="brand-tag">Powered by AI</span>
+        </div>
+
+        <h1>Generate property listings</h1>
+        <p class="subtitle">
+          Enter your property details and get a professional listing in seconds.
+        </p>
+
+        <div class="section-label">Property details</div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="propType">Property type</label>
+            <select id="propType">
+              <option value="apartment">Apartment</option>
+              <option value="duplex">Duplex</option>
+              <option value="detached house">Detached house</option>
+              <option value="semi-detached">Semi-detached</option>
+              <option value="terraced house">Terraced house</option>
+              <option value="land">Land</option>
+              <option value="commercial space">Commercial space</option>
+              <option value="shortlet apartment">Shortlet</option>
+              <option value="office space">Office space</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="location">Location</label>
+            <input
+              type="text"
+              id="location"
+              placeholder="e.g. Lekki Phase 1, Lagos"
+            />
+          </div>
+          <div class="field">
+            <label for="beds">Bedrooms</label>
+            <select id="beds">
+              <option value="studio">Studio</option>
+              <option value="1-bedroom">1 bedroom</option>
+              <option value="2-bedroom" selected>2 bedroom</option>
+              <option value="3-bedroom">3 bedroom</option>
+              <option value="4-bedroom">4 bedroom</option>
+              <option value="5-bedroom">5 bedroom</option>
+              <option value="6-bedroom+">6+ bedroom</option>
+              <option value="N/A (commercial or land)">N/A</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="price">Asking price (₦)</label>
+            <input type="text" id="price" placeholder="e.g. 85,000,000" />
+          </div>
+        </div>
+
+        <div class="form-full">
+          <div class="field">
+            <label for="features">Key features</label>
+            <input
+              type="text"
+              id="features"
+              placeholder="e.g. BQ, swimming pool, 24hr security, generator, 3 parking spaces"
+            />
+          </div>
+        </div>
+
+        <div class="form-full">
+          <div class="field">
+            <label for="extras"
+              >Extra details
+              <span style="font-weight: 400; color: var(--text-hint)"
+                >(optional)</span
+              ></label
+            >
+            <textarea
+              id="extras"
+              placeholder="Estate name, finishing quality, proximity to landmarks, who it's ideal for..."
+            ></textarea>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="section-label">Listing tone</div>
+        <div class="tone-row" id="toneRow">
+          <button
+            class="tone-btn active"
+            data-tone="Premium and aspirational — sophisticated, exclusive language that targets high-end buyers"
+          >
+            Premium
+          </button>
+          <button
+            class="tone-btn"
+            data-tone="Warm and inviting — friendly, homely language that makes buyers picture themselves living there"
+          >
+            Warm & homely
+          </button>
+          <button
+            class="tone-btn"
+            data-tone="Investment-focused — highlight ROI, rental yield potential, capital appreciation, and value for investors"
+          >
+            Investment
+          </button>
+          <button
+            class="tone-btn"
+            data-tone="Short and punchy for social media — energetic, emoji-free, designed for Instagram or TikTok captions"
+          >
+            Social media
+          </button>
+        </div>
+
+        <button class="generate-btn" id="genBtn" onclick="generate()">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            style="flex-shrink: 0"
+          >
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+          Generate listing
+        </button>
+
+        <div id="errMsg" class="error"></div>
+
+        <div class="result-box" id="resultBox" style="display: none">
+          <div class="result-header">
+            <div class="result-header-left">
+              <span class="result-label">Generated listing</span>
+            </div>
+            <button class="copy-btn" id="copyBtn" onclick="copyListing()">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path
+                  d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"
+                ></path>
+              </svg>
+              Copy
+            </button>
+          </div>
+          <div class="result-content" id="resultContent"></div>
+        </div>
+      </div>
+
+      <p class="footer">
+        Built with Claude AI &nbsp;·&nbsp;
+        <a href="https://www.anthropic.com" target="_blank">Anthropic</a>
+      </p>
+    </div>
+
+    <script>
+      let selectedTone =
+        "Premium and aspirational — sophisticated, exclusive language that targets high-end buyers";
+
+      document.querySelectorAll(".tone-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tone-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          selectedTone = btn.dataset.tone;
+        });
+      });
+
+      async function generate() {
+        const propType = document.getElementById("propType").value;
+        const location = document.getElementById("location").value.trim();
+        const beds = document.getElementById("beds").value;
+        const price = document.getElementById("price").value.trim();
+        const features = document.getElementById("features").value.trim();
+        const extras = document.getElementById("extras").value.trim();
+        const errMsg = document.getElementById("errMsg");
+        errMsg.textContent = "";
+
+        if (!location) {
+          errMsg.textContent = "Please enter a location.";
+          return;
+        }
+        if (!price) {
+          errMsg.textContent = "Please enter a price.";
+          return;
+        }
+        if (!features) {
+          errMsg.textContent = "Please add at least a few key features.";
+          return;
+        }
+
+        const btn = document.getElementById("genBtn");
+        btn.disabled = true;
+        btn.innerHTML = `
+        <div class="dots" style="display:flex;gap:4px;">
+          <span></span><span></span><span></span>
+        </div>
+        Generating...`;
+
+        const resultBox = document.getElementById("resultBox");
+        const resultContent = document.getElementById("resultContent");
+        resultBox.style.display = "block";
+        resultContent.innerHTML = `
+        <div class="loading-wrap">
+          <div class="dots"><span></span><span></span><span></span></div>
+          Writing your listing...
+        </div>`;
+
+        const prompt = `You are a professional Nigerian real estate copywriter who writes for top Lagos and Abuja property firms.
+
+Write a compelling property listing with these details:
+- Property type: ${propType}
+- Bedrooms: ${beds}
+- Location: ${location}
+- Asking price: ₦${price}
+- Key features: ${features}
+${extras ? `- Additional info: ${extras}` : ""}
+- Tone: ${selectedTone}
+
+Structure your listing as:
+1. A strong, specific headline (not generic — make it memorable)
+2. An opening paragraph (2-3 sentences that paint a picture)
+3. Property highlights (4-6 punchy lines, no bullet symbols, just clean line breaks)
+4. A closing call to action (1-2 sentences, direct)
+
+Rules:
+- Under 220 words total
+- Write for a Nigerian audience who knows Lagos/Abuja real estate
+- No markdown, no asterisks, no dashes as bullets — plain text only
+- Do not start with "Introducing" or "Welcome to"
+- Make the headline and opening feel earned, not templated`;
+
+        try {
+          const response = await fetch(
+            "https://api.anthropic.com/v1/messages",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: 1000,
+                messages: [{ role: "user", content: prompt }],
+              }),
+            },
+          );
+
+          const data = await response.json();
+          if (data.error) throw new Error(data.error.message);
+
+          const text = data.content?.find((b) => b.type === "text")?.text || "";
+          resultContent.textContent = text;
+        } catch (err) {
+          resultContent.textContent = "";
+          resultBox.style.display = "none";
+          errMsg.textContent =
+            "Something went wrong. Check your connection and try again.";
+          console.error(err);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          Generate listing`;
+        }
+      }
+
+      function copyListing() {
+        const text = document.getElementById("resultContent").textContent;
+        if (!text || text.includes("Writing your listing")) return;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.getElementById("copyBtn");
+          btn.classList.add("copied");
+          btn.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Copied`;
+          setTimeout(() => {
+            btn.classList.remove("copied");
+            btn.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+            </svg>
+            Copy`;
+          }, 2500);
+        });
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") generate();
+      });
+    </script>
+  </body>
+</html>
