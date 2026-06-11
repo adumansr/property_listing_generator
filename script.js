@@ -80,17 +80,21 @@ Rules:
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }],
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
       }),
     });
 
     const data = await response.json();
     if (data.error) throw new Error(data.error.message);
 
-    const text = data.content?.find((b) => b.type === "text")?.text || "";
-    resultContent.textContent = text;
+    const text =
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No response generated.";
   } catch (err) {
     resultContent.textContent = "";
     resultBox.style.display = "none";

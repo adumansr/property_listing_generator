@@ -2,20 +2,32 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body);
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: body.messages.map((msg) => ({
+            parts: [
+              {
+                text: msg.content,
+              },
+            ],
+          })),
+        }),
       },
-      body: JSON.stringify(body),
-    });
+    );
 
     const data = await response.json();
 
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(data),
     };
   } catch (error) {
